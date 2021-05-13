@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+# ./dna_codes_3
+# Decodes a DNA sequence using the process of compliment,
+# transcription, and translation.
+# The DNA is already split into triplets.
+#
+# By        : Leomar Durán <https://github.com/lduran2/>
+# When      : 2021-05-13t04:26
+# For       : KINS 1223
+# Version   : 1.0
+#
+# Changelog :
+#     v1.0 - 2021-05-13t04:26
+#         start with splitting DNA by triplets by whitespaces
+
+def main():
+    dna = input('Enter the DNA.\n> ').split()
+    print(dna)
+
+main()
+print('Done.')
