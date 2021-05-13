@@ -5,12 +5,15 @@
 # The DNA is already split into triplets.
 #
 # By        : Leomar Durán <https://github.com/lduran2/>
-# When      : 2021-05-13t04:49
+# When      : 2021-05-13t05:01
 # For       : KINS 1223
-# Version   : 1.1
+# Version   : 1.3
 #
 # Changelog :
-#     v1.1 - 2021-05-13t04:49
+#     v1.3 - 2021-05-13t05:01
+#         read from the translations csv file
+#
+#     v1.2 - 2021-05-13t04:49
 #         transcribing to mRNA
 #
 #     v1.1 - 2021-05-13t04:44
@@ -18,6 +21,8 @@
 #
 #     v1.0 - 2021-05-13t04:26
 #         start with splitting DNA by triplets by whitespaces
+
+import csv # for DictReader
 
 # complimentary bases in DNA
 compliments = {
@@ -45,6 +50,19 @@ def main():
 
     # transcribe
     m_rna = list(map(lambda c: transcriptions.get(c, ''), dna_compliment))
+
+    # read the translations file into the translations dictionary
+    translations = {}   # the translations dictionary
+    with open('translations.csv') as csvfile:
+        csvin = csv.DictReader(csvfile)
+        for row in csvin:
+            translations[row['codon']] = row['amino_acid']
+        # end for row in csvin
+    # end with open('translations.csv') as csvfile
+
+    # test the translations
+    print(translations['AAA'])
+    print(translations['UUG'])
 
     # print the results
     print('Complimentary DNA:', ''.join(dna_compliment))
