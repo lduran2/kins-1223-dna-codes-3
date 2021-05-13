@@ -5,11 +5,14 @@
 # The DNA is already split into triplets.
 #
 # By        : Leomar Durán <https://github.com/lduran2/>
-# When      : 2021-05-13t05:01
+# When      : 2021-05-13t05:12
 # For       : KINS 1223
-# Version   : 1.3
+# Version   : 1.4
 #
 # Changelog :
+#     v1.4 - 2021-05-13t05:12
+#         finished the translation
+#
 #     v1.3 - 2021-05-13t05:01
 #         read from the translations csv file
 #
@@ -22,7 +25,8 @@
 #     v1.0 - 2021-05-13t04:26
 #         start with splitting DNA by triplets by whitespaces
 
-import csv # for DictReader
+import csv  # for DictReader
+import re   # for findall
 
 # complimentary bases in DNA
 compliments = {
@@ -45,10 +49,11 @@ def main():
     dna = list(input('Enter the DNA.\n> '))
 
     # the complimentary bases, split into characters
-    # only base characters
+    # non-base characters to ''
     dna_compliment = list(map(lambda c: compliments.get(c, ''), dna))
 
     # transcribe
+    # non-base characters to ''
     m_rna = list(map(lambda c: transcriptions.get(c, ''), dna_compliment))
 
     # read the translations file into the translations dictionary
@@ -60,13 +65,19 @@ def main():
         # end for row in csvin
     # end with open('translations.csv') as csvfile
 
-    # test the translations
-    print(translations['AAA'])
-    print(translations['UUG'])
+    # split mRNA into triplets
+    m_rna_3s = re.findall('.{3}', ''.join(m_rna))
+
+    # translate each triplet
+    message = list(map(lambda trip: translations.get(trip, '(ERROR)'), m_rna_3s))
+    
 
     # print the results
     print('Complimentary DNA:', ''.join(dna_compliment))
     print('Transcription mRNA:', ''.join(m_rna))
+    print('mRNA as triplets:', str(m_rna_3s))
+    print('Message:', ' '.join(message))
+# end def main()
 
 main()
 print('Done.')
