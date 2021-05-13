@@ -5,11 +5,14 @@
 # The DNA is already split into triplets.
 #
 # By        : Leomar Durán <https://github.com/lduran2/>
-# When      : 2021-05-13t04:44
+# When      : 2021-05-13t04:49
 # For       : KINS 1223
 # Version   : 1.1
 #
 # Changelog :
+#     v1.1 - 2021-05-13t04:49
+#         transcribing to mRNA
+#
 #     v1.1 - 2021-05-13t04:44
 #         complimenting the DNA
 #
@@ -24,6 +27,13 @@ compliments = {
     'C': 'G'
 }
 
+transcriptions = {
+    'A': 'U',
+    'G': 'C',
+    'T': 'A',
+    'C': 'G'
+}
+
 def main():
     # get the DNA sequence
     # split into list of characters including spaces
@@ -33,8 +43,12 @@ def main():
     # only base characters
     dna_compliment = list(map(lambda c: compliments.get(c, ''), dna))
 
-    # print the result
-    print(str(dna_compliment))
+    # transcribe
+    m_rna = list(map(lambda c: transcriptions.get(c, ''), dna_compliment))
+
+    # print the results
+    print('Complimentary DNA:', ''.join(dna_compliment))
+    print('Transcription mRNA:', ''.join(m_rna))
 
 main()
 print('Done.')
