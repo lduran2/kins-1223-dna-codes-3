@@ -1,2 +1,8 @@
 # the translations csv file
 translations.csv
+
+# the messages encoded as DNA
+messages.txt
+
+# the resulting message
+results.txt

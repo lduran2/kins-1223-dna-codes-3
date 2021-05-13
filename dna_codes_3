@@ -5,11 +5,14 @@
 # The DNA is already split into triplets.
 #
 # By        : Leomar Durán <https://github.com/lduran2/>
-# When      : 2021-05-13t05:12
+# When      : 2021-05-13t05:26
 # For       : KINS 1223
-# Version   : 1.4
+# Version   : 1.5
 #
 # Changelog :
+#     v1.5 - 2021-05-13t05:26
+#         loop until no DNA and print debug messages to stderr
+#
 #     v1.4 - 2021-05-13t05:12
 #         finished the translation
 #
@@ -27,6 +30,7 @@
 
 import csv  # for DictReader
 import re   # for findall
+import sys  # for stderr
 
 # complimentary bases in DNA
 compliments = {
@@ -36,6 +40,7 @@ compliments = {
     'C': 'G'
 }
 
+# transcriptions of DNA to mRNA
 transcriptions = {
     'A': 'U',
     'G': 'C',
@@ -44,40 +49,82 @@ transcriptions = {
 }
 
 def main():
+    # translate until no more DNA
+    while (translate_dna_from_input()):
+        # print a new line after each message
+        print(file=sys.stderr)
+    # end while (translate_dna_from_input())
+# end def main()
+
+def translate_dna_from_input():
+    '''
+    Translates DNA from input to a message.
+    @returns
+        true if DNA was entered; false otherwise
+    '''
+
     # get the DNA sequence
+    print('Enter the DNA.\n> ', file=sys.stderr, end='')
+    try:
+        dna = input('')
+    # catch an end of file while reading
+    except EOFError:
+        dna = ''
+    # end except EOFError
+
+    # if no DNA return failure
+    if (''==dna):
+        return False
+    # end if (dna is '')
+
     # split into list of characters including spaces
-    dna = list(input('Enter the DNA.\n> '))
+    dna_bases = list(dna)
 
     # the complimentary bases, split into characters
     # non-base characters to ''
-    dna_compliment = list(map(lambda c: compliments.get(c, ''), dna))
+    dna_compliment = list(map(lambda c: compliments.get(c, ''), dna_bases))
 
     # transcribe
     # non-base characters to ''
     m_rna = list(map(lambda c: transcriptions.get(c, ''), dna_compliment))
 
-    # read the translations file into the translations dictionary
+    # translations from mRNA to the 'amino_acid' message using tRNA
+    translations = read_translations('translations.csv')
+
+    # split mRNA into triplets
+    # it looks like each triplet is a codon for the mRNA
+    # rather than an anti-codon for the tRNA
+    m_rna_3s = re.findall('.{3}', ''.join(m_rna))
+
+    # translate each triplet
+    message = list(map(lambda trip: translations.get(trip, '(ERROR)'), m_rna_3s))
+
+
+    # print the results
+    print('Complimentary DNA:', ''.join(dna_compliment), file=sys.stderr)
+    print('Transcription mRNA:', ''.join(m_rna), file=sys.stderr)
+    print('mRNA as triplets:', str(m_rna_3s), file=sys.stderr)
+    print('Message:', file=sys.stderr)
+    # print only the message to stdout
+    print(' '.join(message))
+
+    # return successfully
+    return True
+# end def translate_dna_from_input()
+
+def read_translations(path):
+    '''
+    Read the translations file into the translations dictionary
+    '''
     translations = {}   # the translations dictionary
-    with open('translations.csv') as csvfile:
+    with open(path) as csvfile:
         csvin = csv.DictReader(csvfile)
         for row in csvin:
             translations[row['codon']] = row['amino_acid']
         # end for row in csvin
     # end with open('translations.csv') as csvfile
-
-    # split mRNA into triplets
-    m_rna_3s = re.findall('.{3}', ''.join(m_rna))
-
-    # translate each triplet
-    message = list(map(lambda trip: translations.get(trip, '(ERROR)'), m_rna_3s))
-    
-
-    # print the results
-    print('Complimentary DNA:', ''.join(dna_compliment))
-    print('Transcription mRNA:', ''.join(m_rna))
-    print('mRNA as triplets:', str(m_rna_3s))
-    print('Message:', ' '.join(message))
-# end def main()
+    return translations
+# end def read_translations()
 
 main()
-print('Done.')
+print('\nDone.', file=sys.stderr)
