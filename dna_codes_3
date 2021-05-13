@@ -5,17 +5,36 @@
 # The DNA is already split into triplets.
 #
 # By        : Leomar Durán <https://github.com/lduran2/>
-# When      : 2021-05-13t04:26
+# When      : 2021-05-13t04:44
 # For       : KINS 1223
-# Version   : 1.0
+# Version   : 1.1
 #
 # Changelog :
+#     v1.1 - 2021-05-13t04:44
+#         complimenting the DNA
+#
 #     v1.0 - 2021-05-13t04:26
 #         start with splitting DNA by triplets by whitespaces
 
+# complimentary bases in DNA
+compliments = {
+    'A': 'T',
+    'G': 'C',
+    'T': 'A',
+    'C': 'G'
+}
+
 def main():
-    dna = input('Enter the DNA.\n> ').split()
-    print(dna)
+    # get the DNA sequence
+    # split into list of characters including spaces
+    dna = list(input('Enter the DNA.\n> '))
+
+    # the complimentary bases, split into characters
+    # only base characters
+    dna_compliment = list(map(lambda c: compliments.get(c, ''), dna))
+
+    # print the result
+    print(str(dna_compliment))
 
 main()
 print('Done.')
